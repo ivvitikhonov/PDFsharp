@@ -1,109 +1,76 @@
 <Project>
-
-    <!--<Import Condition="Exists('Local.Packages.props')" Project="$([MSBuild]::GetPathOfFileAbove('Local.Packages.props', '$(MSBuildThisFileDirectory)'))" />-->
-
-    <PropertyGroup>
-        <NetCore_PackageVersion>6.0.0</NetCore_PackageVersion>
-        <AspNetCore_PackageVersion>6.0.0</AspNetCore_PackageVersion>
-        <AspNetCore_SignalR_PackageVersion>6.0.0</AspNetCore_SignalR_PackageVersion>
-        <EfCore_PackageVersion>6.0.0</EfCore_PackageVersion>
-    </PropertyGroup>
-
-    <ItemGroup>
-
-        <!-- Microsoft packages with special version numbers -->
-
-        <PackageVersion Include="GitVersion.MsBuild" Version="5.12.0" />
-        <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
-
-        <PackageVersion Include="System.Net.Http" Version="4.3.4" />
-        <PackageVersion Include="System.IO.Compression.ZipFile" Version="4.3.0" />
-        <PackageVersion Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-
-        <PackageVersion Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
-        <PackageVersion Include="System.Diagnostics.Process" Version="4.3.0" />
-
-        <PackageVersion Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
-
-        <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-
-        <!--<PackageVersion Include="Microsoft.Identity.Client" Version="4.37.0" />-->
-
-        <!--<PackageVersion Include="Azure.Identity" Version="1.5" />-->
-        <!--<PackageVersion Include="Microsoft.Azure.Services.AppAuthentication" Version="1.6.2" />-->
-        <PackageVersion Include="Azure.ResourceManager.Resources" Version="1.0.0-beta.3" />
-
-        <!-- Microsoft system packages -->
-
-        <PackageVersion Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
-        <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="7.0.0" />
-
-        <!-- Microsoft packages -->
-
-        <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="System.Collections.Immutable" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Logging.Configuration" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.Configuration" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.CommandLine" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.Options" Version="$(NetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
-
-        <!-- Identity packages -->
-
-        <PackageVersion Include="IdentityModel" Version="5.2.0" />
-        <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
-
-        <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="$(AspNetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetCore_PackageVersion)" />
-
-        <!-- ASP.NET Core packages still with version 2.2 -->
-
-        <PackageVersion Include="Microsoft.AspNetCore" Version="2.2.0" />
-        <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageVersion Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
-        <PackageVersion Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
-
-        <!-- ASP NET Core packages -->
-
-        <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(AspNetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-        <PackageVersion Include="Microsoft.Extensions.Http" Version="$(NetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.AspNetCore.Components" Version="$(AspNetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="$(AspNetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="$(AspNetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="$(AspNetCore_PackageVersion)" />
-        <PackageVersion Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="$(AspNetCore_PackageVersion)" />
-
-        <PackageVersion Include="Microsoft.AspNetCore.Razor.Language" Version="$(AspNetCore_PackageVersion)" />
-
-        <!-- SignalR packages -->
-
-        <!--<PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="$(AspNetCore_SignalR_PackageVersion)" />-->
-        <!--<PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="$(AspNetCore_SignalR_PackageVersion)" />
+  <!--<Import Condition="Exists('Local.Packages.props')" Project="$([MSBuild]::GetPathOfFileAbove('Local.Packages.props', '$(MSBuildThisFileDirectory)'))" />-->
+  <PropertyGroup>
+    <NetCore_PackageVersion>6.0.0</NetCore_PackageVersion>
+    <AspNetCore_PackageVersion>6.0.0</AspNetCore_PackageVersion>
+    <AspNetCore_SignalR_PackageVersion>6.0.0</AspNetCore_SignalR_PackageVersion>
+    <EfCore_PackageVersion>6.0.0</EfCore_PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Microsoft packages with special version numbers -->
+    <PackageVersion Include="GitVersion.MsBuild" Version="5.12.0" />
+    <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageVersion Include="System.Net.Http" Version="4.3.4" />
+    <PackageVersion Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+    <PackageVersion Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+    <PackageVersion Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
+    <PackageVersion Include="System.Diagnostics.Process" Version="4.3.0" />
+    <PackageVersion Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
+    <PackageVersion Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <!--<PackageVersion Include="Microsoft.Identity.Client" Version="4.37.0" />-->
+    <!--<PackageVersion Include="Azure.Identity" Version="1.5" />-->
+    <!--<PackageVersion Include="Microsoft.Azure.Services.AppAuthentication" Version="1.6.2" />-->
+    <PackageVersion Include="Azure.ResourceManager.Resources" Version="1.0.0-beta.3" />
+    <!-- Microsoft system packages -->
+    <PackageVersion Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.21253.7" />
+    <PackageVersion Include="System.Reflection.MetadataLoadContext" Version="7.0.0" />
+    <!-- Microsoft packages -->
+    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="System.Collections.Immutable" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Configuration" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.CommandLine" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.Win32.Registry" Version="6.0.0-preview.5.21301.5" />
+    <!-- Identity packages -->
+    <PackageVersion Include="IdentityModel" Version="5.2.0" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetCore_PackageVersion)" />
+    <!-- ASP.NET Core packages still with version 2.2 -->
+    <PackageVersion Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
+    <!-- ASP NET Core packages -->
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="$(NetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Analyzers" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="$(AspNetCore_PackageVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Razor.Language" Version="$(AspNetCore_PackageVersion)" />
+    <!-- SignalR packages -->
+    <!--<PackageVersion Include="Microsoft.AspNetCore.SignalR.Common" Version="$(AspNetCore_SignalR_PackageVersion)" />-->
+    <!--<PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="$(AspNetCore_SignalR_PackageVersion)" />
         <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="$(AspNetCore_SignalR_PackageVersion)" />-->
 
         <!--<PackageVersion Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />-->
