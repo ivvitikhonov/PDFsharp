@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
@@ -10,10 +10,10 @@
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NuspecFile>$(MSBuildThisFileDirectory)$(MSBuildProjectName).nuspec</NuspecFile>
-    <NuGetId>PDFsharp</NuGetId>
-    <NuGetTitle>PDFsharp for Windows and Linux</NuGetTitle>
+    <NuGetId>PDFsharp-extended</NuGetId>
+    <NuGetTitle>PDFsharp for Windows and Linux, with extra features: support for .netstandard2.0, digital signatures, file attachment annotations, preservation of XMP data, etc.</NuGetTitle>
     <NuGetDescription Condition=" '$(Configuration)'=='Debug' ">$(DebugBuildMessage)%0D$(NuGetDescription)</NuGetDescription>
-    <NuGetSummary>A .NET library for processing PDF.</NuGetSummary>
+    <NuGetSummary>A .NET library for processing PDF. With extra features: support for .netstandard2.0, digital signatures, file attachment annotations, preservation of XMP data, etc.</NuGetSummary>
     <NuGetTags>$(NuGetTags_PdfSharp)</NuGetTags>
   </PropertyGroup>
 
