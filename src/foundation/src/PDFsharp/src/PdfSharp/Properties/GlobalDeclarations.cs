@@ -12,5 +12,5 @@ using System.Runtime.InteropServices;
 //#endif
 
 // Temporary HACK for PDFsharp Universal Accessibility.
-[assembly: InternalsVisibleTo("PdfSharp.UA")]
-[assembly: InternalsVisibleTo("PdfSharp.UA-wpf")]
+//[assembly: InternalsVisibleTo("PdfSharp.UA")]
+//[assembly: InternalsVisibleTo("PdfSharp.UA-wpf")]
