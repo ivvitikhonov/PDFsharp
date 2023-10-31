@@ -1,4 +1,4 @@
-// PDFsharp - A .NET library for processing PDF
+﻿// PDFsharp - A .NET library for processing PDF
 // See the LICENSE file in the solution root for more information.
 
 using PdfSharp.Drawing;
@@ -15,7 +15,7 @@ namespace PdfSharp.Pdf.Signatures
     /// <summary>
     /// PdfDocument signature handler.
     /// Attaches a PKCS#7 signature digest to PdfDocument.
-    /// Digest algorithm will be either SHA1/SHA256/SHA512 depending on PdfDocument.Version.
+    /// Digest algorithm will be either SHA256/SHA512 depending on PdfDocument.Version.
     /// </summary>
     public class PdfSignatureHandler
     {
@@ -52,40 +52,60 @@ namespace PdfSharp.Pdf.Signatures
 
         private void ComputeSignatureAndRange(object sender, PdfDocumentEventArgs e)
         {
-            var writer = e.Writer;            
+            var writer = e.Writer;
+
+            var isVerbose = writer.Layout == IO.PdfWriterLayout.Verbose; // DEBUG mode makes the writer Verbose and will introduce 1 extra space between entries key and value
+            // if Verbose, a space is added between entry key and entry value
+            var verboseExtraSpaceSeparatorLength = isVerbose ? 1 : 0;
+
+            var (rangedStreamToSign, byteRangeArray) = GetRangeToSignAndByteRangeArray(writer.Stream, verboseExtraSpaceSeparatorLength);
 
             // writing actual ByteRange in place of the placeholder
-
-            var byteRangeArray = new PdfArray();
-            byteRangeArray.Elements.Add(new PdfInteger(0));
-            byteRangeArray.Elements.Add(new PdfInteger(signatureFieldContentsPdfString.PositionStart - PdfSignatureField.Keys.Contents.Length)); // PositionStart actually indicates position of the HexLiteral string right after the /Contents so we need to exclude full /Contents entry
-            byteRangeArray.Elements.Add(new PdfInteger(signatureFieldContentsPdfString.PositionEnd));
-            byteRangeArray.Elements.Add(new PdfInteger((int)writer.Stream.Length - signatureFieldContentsPdfString.PositionEnd));
 
             writer.Stream.Position = (signatureFieldByteRangePdfArray as PdfArrayWithPadding).PositionStart;
             byteRangeArray.WriteObject(writer);
 
             // computing and writing document's digest
 
-            var rangedStreamToSign = GetRangeToSign(writer.Stream); // will exclude SignatureField's /Contents entry from hash computation
-
             var signature = signer.GetSignedCms(rangedStreamToSign, Document.Version);
+
             if (signature.Length != knownSignatureLengthInBytesByPdfVersion[Document.Version])
                 throw new Exception("The digest length is different that the approximation made.");
 
             var signatureAsRawString = PdfEncoders.RawEncoding.GetString(signature, 0, signature.Length);
             var tempContentsPdfString = new PdfString(signatureAsRawString, PdfStringFlags.HexLiteral); // has to be a hex string
-            writer.Stream.Position = signatureFieldContentsPdfString.PositionStart + 1/*' '*/; // tempContentsPdfString is orphan, so it will not write the space. need to begin write 1 byte further
+            writer.Stream.Position = signatureFieldContentsPdfString.PositionStart + verboseExtraSpaceSeparatorLength; // tempContentsPdfString is orphan, so it will not write the space delimiter: need to begin write 1 byte further if Verbose
             tempContentsPdfString.WriteObject(writer);
         }
 
-        private RangedStream GetRangeToSign(Stream stream)
+        /// <summary>
+        /// Get the bytes ranges to sign.
+        /// As recommended in PDF specs, whole document will be signed, except for the hexadecimal signature token value in the /Contents entry.
+        /// Example: '/Contents <aaaaa111111>' => '<aaaaa111111>' will be excluded from the bytes to sign.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="verboseExtraSpaceSeparatorLength"></param>
+        /// <returns></returns>
+        private (RangedStream rangedStream, PdfArray byteRangeArray) GetRangeToSignAndByteRangeArray(Stream stream, int verboseExtraSpaceSeparatorLength)
         {
-            return new RangedStream(stream, new List<RangedStream.Range>()
+            int firstRangeOffset = 0,
+                firstRangeLength = signatureFieldContentsPdfString.PositionStart + verboseExtraSpaceSeparatorLength,
+                secondRangeOffset = signatureFieldContentsPdfString.PositionEnd,
+                secondRangeLength = (int)stream.Length - signatureFieldContentsPdfString.PositionEnd;
+
+            var byteRangeArray = new PdfArray();
+            byteRangeArray.Elements.Add(new PdfInteger(firstRangeOffset));
+            byteRangeArray.Elements.Add(new PdfInteger(firstRangeLength));
+            byteRangeArray.Elements.Add(new PdfInteger(secondRangeOffset));
+            byteRangeArray.Elements.Add(new PdfInteger(secondRangeLength));
+
+            var rangedStream = new RangedStream(stream, new List<RangedStream.Range>()
             {
-                new RangedStream.Range(0, signatureFieldContentsPdfString.PositionStart - PdfSignatureField.Keys.Contents.Length), // PositionStart actually indicates position of the HexLiteral string right after the /Contents so we need to exclude full /Contents entry
-                new RangedStream.Range(signatureFieldContentsPdfString.PositionEnd, stream.Length - signatureFieldContentsPdfString.PositionEnd)
+                new RangedStream.Range(firstRangeOffset, firstRangeLength),
+                new RangedStream.Range(secondRangeOffset, secondRangeLength)
             });
+
+            return (rangedStream, byteRangeArray);
         }
 
         private void AddSignatureComponents(object sender, EventArgs e)
@@ -97,13 +117,7 @@ namespace PdfSharp.Pdf.Signatures
             //Document.Internals.AddObject(signatureFieldByteRange);
 
             var signatureDictionary = GetSignatureDictionary(signatureFieldContentsPdfString, signatureFieldByteRangePdfArray);
-            var signatureField = GetSignatureField(signatureDictionary);
-            RenderAppearance(signatureField, Options.AppearanceHandler ?? new DefaultSignatureAppearanceHandler()
-            {
-                Location = Options.Location,
-                Reason = Options.Reason,
-                Signer = signer.GetName()
-            });
+            var signatureField = GetSignatureField(signatureDictionary);            
 
             var annotations = Document.Pages[0].Elements.GetArray(PdfPage.Keys.Annots);
             if (annotations == null)
@@ -141,7 +155,7 @@ namespace PdfSharp.Pdf.Signatures
 
             // annotation keys
             signatureField.Elements.Add(PdfSignatureField.Keys.FT, new PdfName("/Sig"));
-            signatureField.Elements.Add(PdfSignatureField.Keys.T, new PdfString("Signature1")); // TODO if already exists, will it cause error? implement a name choser if yes
+            signatureField.Elements.Add(PdfSignatureField.Keys.T, new PdfString("Signature1")); // TODO? if already exists, will it cause error? implement a name choser if yes
             signatureField.Elements.Add(PdfSignatureField.Keys.Ff, new PdfInteger(132));
             signatureField.Elements.Add(PdfSignatureField.Keys.DR, new PdfDictionary());
             signatureField.Elements.Add(PdfSignatureField.Keys.Type, new PdfName("/Annot"));
@@ -150,40 +164,17 @@ namespace PdfSharp.Pdf.Signatures
             
             signatureField.Elements.Add("/Rect", new PdfRectangle(Options.Rectangle));
 
+            signatureField.CustomAppearanceHandler = Options.AppearanceHandler ?? new DefaultSignatureAppearanceHandler()
+            {
+                Location = Options.Location,
+                Reason = Options.Reason,
+                Signer = signer.GetName()
+            };
+            signatureField.PrepareForSave(); // TODO: for some reason, PdfSignatureField.PrepareForSave() is not triggered automatically so let's call it manually from here, but it would be better to be called automatically
+
             Document.Internals.AddObject(signatureField);
 
             return signatureField;
-        }
-
-        private void RenderAppearance(PdfSignatureField signatureField, IAnnotationAppearanceHandler appearanceHandler)
-        {
-            PdfRectangle rect = signatureField.Elements.GetRectangle(PdfAnnotation.Keys.Rect);
-
-            var visible = !(rect.X1 + rect.X2 + rect.Y1 + rect.Y2 == 0);
-
-            if (!visible)
-                return;
-
-            if (appearanceHandler == null)
-                throw new Exception("AppearanceHandler is null");
-            
-            XForm form = new XForm(Document, rect.Size);
-            XGraphics gfx = XGraphics.FromForm(form);
-
-            appearanceHandler.DrawAppearance(gfx, rect.ToXRect());
-
-            form.DrawingFinished();
-
-            // Get existing or create new appearance dictionary
-            PdfDictionary ap = signatureField.Elements[PdfAnnotation.Keys.AP] as PdfDictionary;
-            if (ap == null)
-            {
-                ap = new PdfDictionary(Document);
-                signatureField.Elements[PdfAnnotation.Keys.AP] = ap;
-            }
-
-            // Set XRef to normal state
-            ap.Elements["/N"] = form.PdfForm.Reference;
         }
 
         private PdfDictionary GetSignatureDictionary(PdfString contents, PdfArray byteRange)
