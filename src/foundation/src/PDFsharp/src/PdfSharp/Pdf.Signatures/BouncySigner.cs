@@ -32,7 +32,7 @@ namespace PdfSharp.Pdf.Signatures
         {
             rangedStream.Position = 0;
 
-            CmsSignedDataGenerator signedDataGenerator = new CmsSignedDataGenerator();
+            CmsSignedDataGenerator signedDataGenerator = new();
 
             var cert = DotNetUtilities.FromX509Certificate(Certificate);
             var key = DotNetUtilities.GetKeyPair(GetAsymmetricAlgorithm(Certificate));
@@ -43,7 +43,7 @@ namespace PdfSharp.Pdf.Signatures
             signedDataGenerator.AddSigner(key.Private, cert, GetProperDigestAlgorithm(pdfVersion));
             signedDataGenerator.AddCertificates(store);
 
-            CmsProcessableInputStream msg = new CmsProcessableInputStream(rangedStream);
+            CmsProcessableInputStream msg = new(rangedStream);
 
             CmsSignedData signedData = signedDataGenerator.Generate(msg, false);
 
@@ -57,16 +57,13 @@ namespace PdfSharp.Pdf.Signatures
         /// <returns></returns>
         private string GetProperDigestAlgorithm(int pdfVersion)
         {
-            switch (pdfVersion)
+            return pdfVersion switch
             {
-                case int when pdfVersion >= 17:
-                    return CmsSignedDataGenerator.DigestSha512;
-                case int when pdfVersion == 16:
-                    return CmsSignedDataGenerator.DigestSha256;
-                case int when pdfVersion >= 13:
-                default:
-                    return CmsSignedDataGenerator.DigestSha256; // SHA1 is obsolete, use at least SHA256
-            }
+                >= 17 => CmsSignedGenerator.DigestSha512,
+                16 => CmsSignedGenerator.DigestSha256,
+                13 => CmsSignedGenerator.DigestSha256,
+                _ => CmsSignedGenerator.DigestSha256,// SHA1 is obsolete, use at least SHA256
+            };
         }
 
         private AsymmetricAlgorithm? GetAsymmetricAlgorithm(X509Certificate2 cert)

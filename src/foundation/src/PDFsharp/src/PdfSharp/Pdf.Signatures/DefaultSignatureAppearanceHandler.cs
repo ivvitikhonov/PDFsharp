@@ -16,12 +16,11 @@ namespace PdfSharp.Pdf.Signatures
 
         public void DrawAppearance(XGraphics gfx, XRect rect)
         {
-            var backColor = XColor.Empty;
             var defaultText = string.Format("Signed by: {0}\nLocation: {1}\nReason: {2}\nDate: {3}", Signer, Location, Reason, DateTime.Now);
 
-            XFont font = new XFont("Verdana", 7, XFontStyleEx.Regular);
+            XFont font = new("Verdana", 7, XFontStyleEx.Regular);
 
-            XTextFormatter txtFormat = new XTextFormatter(gfx);
+            XTextFormatter txtFormat = new(gfx);
 
             var currentPosition = new XPoint(0, 0);
 

@@ -11,7 +11,7 @@ namespace PdfSharp.Pdf.Signatures
 {
     public class DefaultSigner : ISigner
     {
-        public X509Certificate2 Certificate { get; private set; }
+        public X509Certificate2 Certificate { get; }
 
         public DefaultSigner(X509Certificate2 Certificate)
         {
@@ -25,21 +25,18 @@ namespace PdfSharp.Pdf.Signatures
             stream.Position = 0;
             stream.Read(range, 0, range.Length);
 
-            var contentInfo = new ContentInfo(range);
-
-            SignedCms signedCms = new SignedCms(contentInfo, true);
-            CmsSigner signer = new CmsSigner(Certificate);
+            CmsSigner signer = new(Certificate);
             signer.UnsignedAttributes.Add(new Pkcs9SigningTime());
 
+            var contentInfo = new ContentInfo(range);
+            SignedCms signedCms = new(contentInfo, true);
             signedCms.ComputeSignature(signer, true);
             var bytes = signedCms.Encode();
 
             return bytes;
         }
 
-        public string GetName()
-        {
-            return Certificate.GetNameInfo(X509NameType.SimpleName, false);
-        }
+        public string GetName() 
+            => Certificate.GetNameInfo(X509NameType.SimpleName, false);
     }
 }
