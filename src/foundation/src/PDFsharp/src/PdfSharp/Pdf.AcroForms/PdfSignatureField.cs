@@ -22,7 +22,7 @@ namespace PdfSharp.Pdf.AcroForms
             : base(dict)
         { }
 
-        public IAnnotationAppearanceHandler CustomAppearanceHandler { get; internal set; }
+        public IAnnotationAppearanceHandler? CustomAppearanceHandler { get; internal set; }
 
         /// <summary>
         /// Creates the custom appearance form X object for the annotation that represents

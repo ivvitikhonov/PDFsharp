@@ -303,7 +303,7 @@
         <Compile Include="..\PdfSharp\Pdf.Signatures\PdfArrayWithPadding.cs" Link="Pdf.Signatures\PdfArrayWithPadding.cs" />
         <Compile Include="..\PdfSharp\Pdf.Signatures\PdfSignatureHandler.cs" Link="Pdf.Signatures\PdfSignatureHandler.cs" />
         <Compile Include="..\PdfSharp\Pdf.Signatures\PdfSignatureOptions.cs" Link="Pdf.Signatures\PdfSignatureOptions.cs" />
-        <Compile Include="..\PdfSharp\Pdf.Signatures\RangedStream.cs" Link="Pdf.Signatures\RangedStream.cs" />
+        <Compile Include="..\PdfSharp\Pdf.Signatures\ReadOnlyRangedStream.cs" Link="Pdf.Signatures\ReadOnlyRangedStream.cs" />
         <Compile Include="..\PdfSharp\Pdf.Structure\PdfAttributesBase.cs" Link="Pdf.Structure\PdfAttributesBase.cs" />
         <Compile Include="..\PdfSharp\Pdf.Structure\PdfLayoutAttributes.cs" Link="Pdf.Structure\PdfLayoutAttributes.cs" />
         <Compile Include="..\PdfSharp\Pdf.Structure\PdfMarkedContentReference.cs" Link="Pdf.Structure\PdfMarkedContentReference.cs" />
