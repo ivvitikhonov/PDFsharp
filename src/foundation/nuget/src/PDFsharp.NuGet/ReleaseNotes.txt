@@ -4,3 +4,10 @@ The packages ’PDFsharp-gdi’ and ’PDFsharp-wpf’ can be used under Windows
 We also publish packages that contain PDFsharp plus MigraDoc.
 See the project docs site for further information:
 https://docs.pdfsharp.net/link/readme-v6.0.html
+
+
+
+PDFsharp-extended:
+
+v1.0.1
+* Fixed issue #61 (XImage.PointHeight returning width)
