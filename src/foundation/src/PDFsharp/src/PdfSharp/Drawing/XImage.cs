@@ -939,7 +939,7 @@ namespace PdfSharp.Drawing
                     if (_importedImage.Information.VerticalDPI > 0)
                         return _importedImage.Information.Height * 72 / _importedImage.Information.VerticalDPI;
                     // Assume 72 DPI if information not available.
-                    return _importedImage.Information.Width;
+                    return _importedImage.Information.Height;
                 }
 #endif
 #if CORE
