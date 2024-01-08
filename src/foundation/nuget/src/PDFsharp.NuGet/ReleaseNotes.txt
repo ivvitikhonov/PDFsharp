@@ -9,5 +9,8 @@ https://docs.pdfsharp.net/link/readme-v6.0.html
 
 PDFsharp-extended:
 
+v1.0.2
+* Workaround for issue #69 (rendering special chars as unknown char instead of just crashing. proper support/fix is still to be done)
+* Fix issue #71 (multiple PdfFileSpecification referencing the same PdfEmbeddedFileStream is now handled without crash)
 v1.0.1
 * Fixed issue #61 (XImage.PointHeight returning width)
