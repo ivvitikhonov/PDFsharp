@@ -316,6 +316,11 @@ namespace PdfSharp.Fonts.OpenType
                 var converted = BitConverter.ToUInt32(BitConverter.GetBytes(value), 0);
                 var cmap = FontFace.cmap.cmap12;
 
+                // KDS temp fix to not throw exception. not sure what real fix should be (support of unicode special chars? calling the other signature of this method?). TODO if fixed in official repo, revert this fix.
+                // case happens when a not-supported character is rendered (for example https://www.compart.com/en/unicode/U+1F980: 🦀)
+                if (cmap is null)
+                    return 0;
+
                 int seg;
                 for (seg = 0; seg < cmap.groups.Length; seg++)
                 {
