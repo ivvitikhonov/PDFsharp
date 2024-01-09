@@ -29,10 +29,21 @@ namespace PdfSharp.Pdf.Signatures
 
         private const int byteRangePaddingLength = 36; // place big enough required to replace [0 0 0 0] with the correct value
 
+        /// <summary>
+        /// Pdf Document signature will be attached to
+        /// </summary>
         public PdfDocument Document { get; private set; }
+
+        /// <summary>
+        /// Signature options
+        /// </summary>
         public PdfSignatureOptions Options { get; private set; }
         private ISigner signer { get; set; }
 
+        /// <summary>
+        /// Attach this signature handler to the given Pdf document
+        /// </summary>
+        /// <param name="documentToSign">Pdf document to sign</param>
         public void AttachToDocument(PdfDocument documentToSign)
         {
             this.Document = documentToSign;
@@ -46,6 +57,12 @@ namespace PdfSharp.Pdf.Signatures
 
         public PdfSignatureHandler(ISigner signer, PdfSignatureOptions options)
         {
+            ArgumentNullException.ThrowIfNull(signer);
+            ArgumentNullException.ThrowIfNull(options);
+
+            if (options.PageIndex < 0)
+                throw new ArgumentOutOfRangeException($"Signature page index cannot be negative.");
+
             this.signer = signer;
             this.Options = options;
         }
@@ -81,7 +98,7 @@ namespace PdfSharp.Pdf.Signatures
         /// <summary>
         /// Get the bytes ranges to sign.
         /// As recommended in PDF specs, whole document will be signed, except for the hexadecimal signature token value in the /Contents entry.
-        /// Example: '/Contents <aaaaa111111>' => '<aaaaa111111>' will be excluded from the bytes to sign.
+        /// Example: '/Contents &lt;aaaaa111111&gt;' => '&lt;aaaaa111111&gt;' will be excluded from the bytes to sign.
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="verboseExtraSpaceSeparatorLength"></param>
@@ -110,6 +127,9 @@ namespace PdfSharp.Pdf.Signatures
 
         private void AddSignatureComponents(object sender, EventArgs e)
         {
+            if (Options.PageIndex >= Document.PageCount)
+                throw new ArgumentOutOfRangeException($"Signature page doesn't exist, specified page was {Options.PageIndex + 1} but document has only {Document.PageCount} page(s).");
+
             var fakeSignature = Enumerable.Repeat((byte)0x20/*actual value does not matter*/, knownSignatureLengthInBytesByPdfVersion[Document.Version]).ToArray();
             var fakeSignatureAsRawString = PdfEncoders.RawEncoding.GetString(fakeSignature, 0, fakeSignature.Length);
             signatureFieldContentsPdfString = new PdfString(fakeSignatureAsRawString, PdfStringFlags.HexLiteral);
@@ -117,11 +137,11 @@ namespace PdfSharp.Pdf.Signatures
             //Document.Internals.AddObject(signatureFieldByteRange);
 
             var signatureDictionary = GetSignatureDictionary(signatureFieldContentsPdfString, signatureFieldByteRangePdfArray);
-            var signatureField = GetSignatureField(signatureDictionary);            
+            var signatureField = GetSignatureField(signatureDictionary);
 
-            var annotations = Document.Pages[0].Elements.GetArray(PdfPage.Keys.Annots);
+            var annotations = Document.Pages[Options.PageIndex].Elements.GetArray(PdfPage.Keys.Annots);
             if (annotations == null)
-                Document.Pages[0].Elements.Add(PdfPage.Keys.Annots, new PdfArray(Document, signatureField));
+                Document.Pages[Options.PageIndex].Elements.Add(PdfPage.Keys.Annots, new PdfArray(Document, signatureField));
             else
                 annotations.Elements.Add(signatureField);
 
@@ -129,7 +149,7 @@ namespace PdfSharp.Pdf.Signatures
             // acroform
 
             var catalog = Document.Catalog;
-            
+
             if (catalog.Elements.GetObject(PdfCatalog.Keys.AcroForm) == null)
                 catalog.Elements.Add(PdfCatalog.Keys.AcroForm, new PdfAcroForm(Document));
 
@@ -160,8 +180,8 @@ namespace PdfSharp.Pdf.Signatures
             signatureField.Elements.Add(PdfSignatureField.Keys.DR, new PdfDictionary());
             signatureField.Elements.Add(PdfSignatureField.Keys.Type, new PdfName("/Annot"));
             signatureField.Elements.Add("/Subtype", new PdfName("/Widget"));
-            signatureField.Elements.Add("/P", Document.Pages[0]);
-            
+            signatureField.Elements.Add("/P", Document.Pages[Options.PageIndex]);
+
             signatureField.Elements.Add("/Rect", new PdfRectangle(Options.Rectangle));
 
             signatureField.CustomAppearanceHandler = Options.AppearanceHandler ?? new DefaultSignatureAppearanceHandler()
@@ -194,6 +214,6 @@ namespace PdfSharp.Pdf.Signatures
             Document.Internals.AddObject(signatureDic);
 
             return signatureDic;
-        }        
+        }
     }
 }
