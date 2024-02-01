@@ -9,6 +9,8 @@ https://docs.pdfsharp.net/link/readme-v6.0.html
 
 PDFsharp-extended:
 
+v1.1.1
+* Fix issue #80 (allow detection of JPEG APP2 ICC_PROFILE headers)
 v1.1.0
 * Merged PR#2 (ability to define on which page the signature is attached)
 v1.0.2
