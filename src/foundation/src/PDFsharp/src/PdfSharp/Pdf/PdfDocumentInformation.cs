@@ -97,7 +97,7 @@ namespace PdfSharp.Pdf
         internal sealed class Keys : KeysBase
         {
             /// <summary>
-            /// (Optional; PDF 1.1) The document’s title.
+            /// (Optional; PDF 1.1) The documentâ€™s title.
             /// </summary>
             [KeyInfo(KeyType.String | KeyType.Optional)]
             public const string Title = "/Title";
@@ -149,7 +149,7 @@ namespace PdfSharp.Pdf
             public const string ModDate = "/ModDate";
 
             /// <summary>
-            /// (Optional; PDF 1.3) A name object indicating whether the document has been modified 
+            /// (Optional; PDF 1.3) A name object indicating whether the document has been modified
             /// to include trapping information.
             /// </summary>
             [KeyInfo("1.3", KeyType.Name | KeyType.Optional)]

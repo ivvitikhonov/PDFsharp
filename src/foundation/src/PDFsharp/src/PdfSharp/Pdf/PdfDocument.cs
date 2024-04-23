@@ -404,38 +404,15 @@ namespace PdfSharp.Pdf
         /// </summary>
         internal override void PrepareForSave()
         {
-            PdfDocumentInformation info = Info;
-
-            // DELETE
-            //// Add patch level to producer if it is not '0'.
-            //string pdfSharpProducer = VersionInfo.Producer;
-            //if (!PdfSharpProductVersionInformation.VersionPatch.Equals("0"))
-            //    pdfSharpProducer = ProductVersionInfo.Producer;
-
             // The Creator is called 'Application' in Acrobat.
             // The Producer is call "Created by" in Acrobat.
 
-            // Set Creator if value is undefined. This is the 'application' in Adobe Reader.
-            if (info.Elements[PdfDocumentInformation.Keys.Creator] is null)
-                info.Creator = PdfSharpProductVersionInformation.Producer;
-
-            // We set Producer if it is not yet set.
-
-            var pdfProducer = $"{PdfSharpProductVersionInformation.Creator} under {RuntimeInformation.OSDescription}";
-
-            //pdfProducer = $"{GitVersionInformation.SemVer} under {RuntimeInformation.OSDescription}";
-
-            // Keep original producer if file was imported. This is 'PDF created by' in Adobe Reader.
-            string producer = info.Producer;
-            if (producer.Length == 0)
-                producer = pdfProducer;
-            else
-            {
-                // Prevent endless concatenation if file is edited with PDFsharp more than once.
-                if (!producer.StartsWith(PdfSharpProductVersionInformation.Title, StringComparison.Ordinal))
-                    producer = $"{pdfProducer} (Original: {producer})";
-            }
-            info.Elements.SetString(PdfDocumentInformation.Keys.Producer, producer);
+            var pdfDocumentInformation = Info;
+            //hardcode fields
+            pdfDocumentInformation.Elements.SetString(PdfDocumentInformation.Keys.Creator,
+                PdfSharpProductVersionInformation.Creator);
+            pdfDocumentInformation.Elements.SetString(PdfDocumentInformation.Keys.Producer,
+                PdfSharpProductVersionInformation.Producer);
 
             // Prepare used fonts.
             _fontTable?.PrepareForSave();
@@ -729,7 +706,7 @@ namespace PdfSharp.Pdf
 
         /// <summary>
         /// Creates a new page and adds it to this document.
-        /// Depending on the IsMetric property of the current region the page size is set to 
+        /// Depending on the IsMetric property of the current region the page size is set to
         /// A4 or Letter respectively. If this size is not appropriate it should be changed before
         /// any drawing operations are performed on the page.
         /// </summary>

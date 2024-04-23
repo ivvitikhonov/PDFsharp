@@ -5,10 +5,12 @@
     <LangVersion>11.0</LangVersion>
     <RootNamespace>PdfSharp</RootNamespace>
     <DefineConstants>CORE;NET_ZIP</DefineConstants>
+    <Company>ivvitikhonov (original empira Software)</Company>
+    <AssemblyVersion>1.0</AssemblyVersion>
+    <FileVersion>1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\..\StrongnameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -40,13 +42,9 @@
     <EmbeddedResource Include="Resources\Messages.restext" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Security.Cryptography.Pkcs" />
-    <PackageReference Include="BouncyCastle.Cryptography" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Text.Encoding.CodePages" />
+    <PackageReference Remove="GitVersion.MsBuild" />
   </ItemGroup>
 
 </Project>

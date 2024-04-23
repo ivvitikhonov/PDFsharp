@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\..\StrongnameKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>

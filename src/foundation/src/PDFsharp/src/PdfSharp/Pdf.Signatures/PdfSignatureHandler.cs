@@ -212,6 +212,7 @@ namespace PdfSharp.Pdf.Signatures
             signatureDic.Elements.Add(PdfSignatureField.Keys.ByteRange, byteRange);
             signatureDic.Elements.Add(PdfSignatureField.Keys.Reason, new PdfString(Options.Reason));
             signatureDic.Elements.Add(PdfSignatureField.Keys.Location, new PdfString(Options.Location));
+            signatureDic.Elements.Add(PdfSignatureField.Keys.ContactInfo, new PdfString(Options.ContactInfo));
 
             Document.Internals.AddObject(signatureDic);
 
